@@ -1,6 +1,6 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
-  publicPath: "./",
+  publicPath: './',
   transpileDependencies: true,
   pages: {
     index: {
@@ -9,7 +9,7 @@ module.exports = defineConfig({
       // the source template
       template: 'public/index.html',
       // output as dist/index.html
-      filename: 'index.html',
+      filename: 'index.html'
     }
   }
 })

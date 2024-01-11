@@ -7,18 +7,13 @@
 <script>
 export default {
   name: 'MainView',
-  props: {
-  },
+  props: {},
   data() {
-    return {
-    }
+    return {}
   },
-  methods: {
-  },
-  mounted(){
-  }
+  methods: {},
+  mounted() {}
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
