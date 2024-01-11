@@ -35,3 +35,7 @@ new Vue({
  - "vue/no-unused-components": "off"
  - "no-mixed-spaces-and-tabs": 0
  - "no-unused-vars": "off"
+
+### Prettier
+
+using ESlint default format with detailed setting in .prettierrc
