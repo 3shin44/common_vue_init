@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <MainView />
+    <GroupMgnt />
   </div>
 </template>
 
 <script>
-import MainView from './views/MainView.vue'
+import GroupMgnt from './views/GroupMgnt.vue'
 
 export default {
   name: 'App',
   components: {
-    MainView
+    GroupMgnt
   }
 }
 </script>
