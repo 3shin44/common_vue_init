@@ -2,14 +2,18 @@
   <div class="edit-modal">
     <el-dialog title="詳細內容" :visible.sync="dialogVisible" width="80%">
       <div class="px-3">
-        帳號 {{ editContent.Account }}
-        姓名 {{ editContent.Name }}
+        帳號 {{ cloneContent.Account }}
+        姓名 {{ cloneContent.Name }}
         <hr>
         接線單位
+        <el-select v-model="cloneContent.ResponsibleDept" size="mini">
+          <el-option v-for="(item, index) in $mockData.deptList" :key="index" :label="item.Name" :value="item.Name">
+          </el-option>
+        </el-select>
         身分
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible = false">儲存</el-button>
+        <el-button type="primary" @click="requestSave">儲存</el-button>
       </span>
     </el-dialog>
   </div>
@@ -23,25 +27,43 @@
         type: Boolean,
         default: false
       },
-      editContent: () => ({})
+      editContent: {
+        type: Object,
+        default: () => ({})
+      },
     },
     data() {
       return {
-        dialogVisible: false
+        dialogVisible: false,
+        cloneContent: {}
       }
     },
     methods: {
-      cloneContent: {}
+      requestSave() {
+        this.$emit("request-save", this.cloneContent)
+        this.dialogVisible = false
+      },
+      resetCloneContent() {
+        this.cloneContent = {
+          DBID: 0,
+          Account: '',
+          Name: '',
+          Role: '',
+          ResponsibleDept: ''
+        }
+      }
     },
-    computed: {
-
+    created(){
+      this.resetCloneContent()
 
     },
     watch: {
       editContent: {
         handler(newVal) {
-          this.cloneContent = Object.assign(newVal)
-        }
+          this.resetCloneContent()
+          Object.assign(this.cloneContent, newVal)
+        },
+        immediate: true
       },
       // 傳遞v-model
       modalShow: {

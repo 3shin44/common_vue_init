@@ -3,14 +3,16 @@
     <CommonTable
       :number-per-page="7"
       :headers="headers"
-      :table-data="$mockData.agentList"
+      :table-data="tableData"
       @button-click="openEdit"
     />
 
     <EditModal
      :modal-show.sync="modalShow"
      :edit-content="currentData"
+     @request-save="updateData"
     ></EditModal>
+    
   </div>
 </template>
 
@@ -47,7 +49,8 @@ export default {
       ],
       isLoading: false,
       modalShow: false,
-      currentData: null
+      currentData: null,
+      tableData: []
     }
   },
   methods: {
@@ -55,9 +58,17 @@ export default {
       console.log(idx, rData)
       this.currentData = rData
       this.modalShow = true
+    },
+    async updateData(rData){
+      this.tableData = []
+      let target = this.$mockData.agentList.find(e=> Number(e.DBID) === Number(rData.DBID) )
+      Object.assign(target, rData)
+      this.tableData = this.$mockData.agentList
     }
   },
-  mounted() {}
+  mounted() {
+    this.tableData = this.$mockData.agentList
+  }
 }
 </script>
 
