@@ -1,3 +1,11 @@
-.test{
-  background-color: red;
+// MOHW 的標題樣式?
+.main-title {
+  font-size: 20px;
+  color: #0e81bf;
+  font-weight: bold;
+}
+
+// BS原生<hr>修正
+hr {
+  margin: 0;
 }
