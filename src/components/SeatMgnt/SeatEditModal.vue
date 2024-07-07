@@ -1,6 +1,6 @@
 <template>
   <div class="seat-edit-modal">
-    <el-dialog :title="cModalTitle" :visible.sync="dialogVisible" width="80%">
+    <el-dialog :title="cModalCfg.title" :visible.sync="dialogVisible" width="80%">
       <div class="px-3" v-if="actionType != 'delete'">
         <div class="row">
           <p class="col-2 col-form-label">位次</p>
@@ -16,7 +16,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer d-flex justify-content-center">
-        <el-button :type="cBtnState.type" @click="requestSave">{{ cBtnState.label }}</el-button>
+        <el-button :type="cModalCfg.type" @click="requestSave">{{ cModalCfg.label }}</el-button>
         <el-button @click="dialogVisible = false">取消</el-button>
       </span>
     </el-dialog>
@@ -65,35 +65,30 @@ export default {
     this.resetCloneContent()
   },
   computed: {
-    cModalTitle() {
-      let modalTitle = ""
-
-      switch (this.actionType) {
-        case "insert":
-          modalTitle = "新增位次"
-          break;
-
-        case "update":
-          modalTitle = "編輯位次"
-          break;
-
-        case "delete":
-          modalTitle = "確認刪除"
-          break;
-      }
-      return modalTitle
-    },
-    cBtnState() {
-      let btnState = {
+    // 彈窗狀態: 新增/編輯/刪除
+    cModalCfg() {
+      let modalCfg = {
+        title: "",
         type: "primary",
         label: "儲存"
       }
 
-      if (this.actionType === 'delete') {
-        btnState.type = "danger"
-        btnState.label = "刪除"
+      switch (this.actionType) {
+        case "insert":
+          modalCfg.title = "新增位次"
+          break;
+
+        case "update":
+          modalCfg.title = "編輯位次"
+          break;
+
+        case "delete":
+          modalCfg.title = "確認刪除"
+          modalCfg.type = "danger"
+          modalCfg.label = "刪除"
+          break;
       }
-      return btnState
+      return modalCfg
     }
   },
   watch: {
