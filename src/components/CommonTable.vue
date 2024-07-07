@@ -3,12 +3,14 @@
     <!-- body: table -->
     <div class="base-table-body">
       <el-table
+        ref="multipleTable"
         v-loading="loading"
         :data="displayData"
         v-bind="elTableAttrs"
         @row-click="rowClick"
         empty-text="暫無資料"
         @sort-change="sortChange"
+        @selection-change="handleSelectionChange"
       >
         <template v-for="(item, index) in getHeaders">
           <!-- slot -->
@@ -59,6 +61,7 @@
           :total="tableData.length"
           :current-page.sync="currentPageNo"
           :page-size="numberPerPage"
+          @current-change="syncSelection"
         >
         </el-pagination>
       </div>
@@ -145,7 +148,12 @@ export default {
       startNo: 0,
       endNo: 0,
       // 當前頁碼
-      currentPageNo: 1
+      currentPageNo: 1,
+      // 對跨頁資料同步選擇使用
+      // 參考原生文件, 對資料切割後必須有地方紀錄選了什麼
+      // 切換頁碼後選回來
+      selectedList: [],
+      keepAllSelection: {}
     }
   },
   methods: {
@@ -315,6 +323,42 @@ export default {
     },
     handleEdit(index, rowData) {
       this.$emit('button-click', index, rowData)
+    },
+    // 已選資料
+    async handleSelectionChange(val) {
+      await this.$nextTick()
+      let keyName = "page" + this.currentPageNo
+      // 產生記憶用物件
+      if(!Array.isArray(this.keepAllSelection[keyName])){
+        this.keepAllSelection[keyName] = []
+      }
+      // 記錄每頁選取資料
+      this.keepAllSelection[keyName] = val
+
+      // EMIT上去給父層使用
+      let emitSelectArr = []
+      for( const [key, val] of Object.entries(this.keepAllSelection) ){
+        if(Array.isArray(val)){
+          emitSelectArr.push(...val)
+        }
+      }
+      this.$emit("update:select-list", emitSelectArr)
+    },
+    // 換頁時同步既存資料
+    syncSelection(){
+      let keyName = "page" + this.currentPageNo
+      // 當前頁面有既存資料, 同步到表格上
+      if(Array.isArray(this.keepAllSelection[keyName]) 
+          && this.keepAllSelection[keyName] != 0
+          && this.displayData.length != 0
+      ){
+        this.displayData.forEach((rowData) => {
+          let isSelected = this.keepAllSelection[keyName].findIndex(item => item === rowData)
+          if(isSelected != -1){
+            this.$refs.multipleTable.toggleRowSelection(rowData, true)
+          }
+        })
+      }
     }
   },
   computed: {

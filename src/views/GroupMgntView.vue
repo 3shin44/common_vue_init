@@ -1,11 +1,9 @@
 <template>
   <div class="group-mgnt-view p-2">
-    <div class="main-title">群組管理</div>
-    <hr />
     <!-- 結果表格與動畫 -->
     <div
       v-if="isQuerying"
-      class="query-result d-flex justify-content-center align-items-center pt-2"
+      class="d-flex justify-content-center align-items-center pt-2"
     >
       <div class="loading">
         <div class="spinner-border text-primary" role="status">
@@ -113,7 +111,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.query-result {
-  height: 50vh;
-}
 </style>
