@@ -2,7 +2,7 @@
   <div id="app">
     <el-row class="app__adjust_height">
       <el-col :span="4" class="app__adjust_height">
-        <el-menu class="border-0">
+        <el-menu class="border-0" :default-active="defaultMenuIndex">
           <el-menu-item v-for="(item, index) of tabList" :key="index" :index="index.toString()"
             @click="changeComponent(item.compName)">
             <span slot="title">{{ item.label }}</span>
@@ -19,11 +19,11 @@
 <script>
   import GroupMgntView from './views/GroupMgntView.vue'
   import PageMgntView from './views/PageMgntView.vue'
-  import DNMgntView from './views/DNMgntView.vue'
+  import SeatMgntView from './views/SeatMgntView.vue'
   export default {
     name: 'App',
     components: {
-      GroupMgntView, PageMgntView, DNMgntView
+      GroupMgntView, PageMgntView, SeatMgntView
     },
     data() {
       return {
@@ -38,16 +38,21 @@
           },
           {
             label: "話機設定",
-            compName: "DNMgntView"
+            compName: "SeatMgntView"
           }
         ],
-        currentCompnent: ""
+        currentCompnent: "",
+        defaultMenuIndex: "0"
       }
     },
     methods: {
       changeComponent(cName) {
         this.currentCompnent = cName
       }
+    },
+    mounted(){
+      this.currentCompnent = "SeatMgntView",
+      this.defaultMenuIndex = "2"
     }
   }
 </script>

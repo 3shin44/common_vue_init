@@ -1,22 +1,22 @@
 <template>
-  <div class="edit-modal">
-    <el-dialog title="詳細內容" :visible.sync="dialogVisible" width="80%">
-      <div class="px-3">
+  <div class="seat-edit-modal">
+    <el-dialog :title="cModalTitle" :visible.sync="dialogVisible" width="80%">
+      <div class="px-3" v-if="actionType != 'delete'">
         <div class="row">
-          <p class="col-2 col-form-label">帳號</p>
+          <p class="col-2 col-form-label">位次</p>
           <div class="col-10">
-            <p class="p-0 m-0">{{ cloneContent.Account }}</p>
+            <p class="p-0 m-0"><el-input v-model="cloneContent.Seat" size="mini"></el-input></p>
           </div>
         </div>
         <div class="row">
-          <p class="col-2 col-form-label">姓名</p>
+          <p class="col-2 col-form-label">主機IP</p>
           <div class="col-10">
-            <p class="p-0 m-0">{{ cloneContent.Name }}</p>
+            <p class="p-0 m-0"><el-input size="mini" v-model="cloneContent.IP"></el-input></p>
           </div>
         </div>
       </div>
       <span slot="footer" class="dialog-footer d-flex justify-content-center">
-        <el-button type="primary" @click="requestSave">儲存</el-button>
+        <el-button :type="cBtnState.type" @click="requestSave">{{ cBtnState.label }}</el-button>
         <el-button @click="dialogVisible = false">取消</el-button>
       </span>
     </el-dialog>
@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  name: 'EditModal',
+  name: 'SeatEditModal',
   props: {
     modalShow: {
       type: Boolean,
@@ -34,6 +34,10 @@ export default {
     editContent: {
       type: Object,
       default: () => ({})
+    },
+    actionType: {
+      type: String,
+      default: "insert"
     }
   },
   data() {
@@ -43,31 +47,63 @@ export default {
     }
   },
   methods: {
-    // 送上去處理
+    // 送上去處理 (動作類型, 資料組)
     requestSave() {
-      this.$emit('request-save', this.cloneContent)
+      this.$emit('request-save', this.actionType, this.cloneContent)
       this.dialogVisible = false
     },
     // 資料初始化
     resetCloneContent() {
       this.cloneContent = {
-        DBID: 0,
-        Account: '',
-        Name: '',
-        Role: '',
-        ResponsibleDept: ''
+        DBID: null,
+        Seat: "",
+        IP: ""
       }
     }
   },
   created() {
     this.resetCloneContent()
   },
+  computed: {
+    cModalTitle() {
+      let modalTitle = ""
+
+      switch (this.actionType) {
+        case "insert":
+          modalTitle = "新增位次"
+          break;
+
+        case "update":
+          modalTitle = "編輯位次"
+          break;
+
+        case "delete":
+          modalTitle = "確認刪除"
+          break;
+      }
+      return modalTitle
+    },
+    cBtnState() {
+      let btnState = {
+        type: "primary",
+        label: "儲存"
+      }
+
+      if (this.actionType === 'delete') {
+        btnState.type = "danger"
+        btnState.label = "刪除"
+      }
+      return btnState
+    }
+  },
   watch: {
     // 監聽資料, PROP下來後要產生另一個新的物件做編輯
     editContent: {
       handler(newVal) {
         this.resetCloneContent()
-        Object.assign(this.cloneContent, newVal)
+        if (this.actionType === 'update') {
+          Object.assign(this.cloneContent, newVal)
+        }
       },
       immediate: true
     },
@@ -96,6 +132,7 @@ export default {
   color: #0e81bf;
   font-weight: bold;
 }
+
 .row {
   display: flex;
   align-items: center;
