@@ -327,9 +327,9 @@ export default {
     // 已選資料
     async handleSelectionChange(val) {
       await this.$nextTick()
-      let keyName = "page" + this.currentPageNo
+      let keyName = 'page' + this.currentPageNo
       // 產生記憶用物件
-      if(!Array.isArray(this.keepAllSelection[keyName])){
+      if (!Array.isArray(this.keepAllSelection[keyName])) {
         this.keepAllSelection[keyName] = []
       }
       // 記錄每頁選取資料
@@ -337,24 +337,27 @@ export default {
 
       // EMIT上去給父層使用
       let emitSelectArr = []
-      for( const [key, val] of Object.entries(this.keepAllSelection) ){
-        if(Array.isArray(val)){
+      for (const [key, val] of Object.entries(this.keepAllSelection)) {
+        if (Array.isArray(val)) {
           emitSelectArr.push(...val)
         }
       }
-      this.$emit("update:select-list", emitSelectArr)
+      this.$emit('update:select-list', emitSelectArr)
     },
     // 換頁時同步既存資料
-    syncSelection(){
-      let keyName = "page" + this.currentPageNo
+    syncSelection() {
+      let keyName = 'page' + this.currentPageNo
       // 當前頁面有既存資料, 同步到表格上
-      if(Array.isArray(this.keepAllSelection[keyName]) 
-          && this.keepAllSelection[keyName] != 0
-          && this.displayData.length != 0
-      ){
+      if (
+        Array.isArray(this.keepAllSelection[keyName]) &&
+        this.keepAllSelection[keyName] != 0 &&
+        this.displayData.length != 0
+      ) {
         this.displayData.forEach((rowData) => {
-          let isSelected = this.keepAllSelection[keyName].findIndex(item => item === rowData)
-          if(isSelected != -1){
+          let isSelected = this.keepAllSelection[keyName].findIndex(
+            (item) => item === rowData
+          )
+          if (isSelected != -1) {
             this.$refs.multipleTable.toggleRowSelection(rowData, true)
           }
         })

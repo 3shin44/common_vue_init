@@ -1,8 +1,10 @@
 <template>
   <div>
-
     <!-- 結果表格與動畫 -->
-    <div v-if="isQuerying" class="d-flex justify-content-center align-items-center pt-2">
+    <div
+      v-if="isQuerying"
+      class="d-flex justify-content-center align-items-center pt-2"
+    >
       <div class="loading">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading...</span>
@@ -12,17 +14,30 @@
 
     <div v-if="!isQuerying">
       <div class="d-flex justify-content-end">
-        <el-button type="success" size="mini" @click="handleEdit('insert')">新增</el-button>
-        <el-button type="danger" size="mini" @click="handleEdit('delete')">刪除</el-button>
+        <el-button type="success" size="mini" @click="handleEdit('insert')"
+          >新增</el-button
+        >
+        <el-button type="danger" size="mini" @click="handleEdit('delete')"
+          >刪除</el-button
+        >
       </div>
 
-      <CommonTable :number-per-page="10" :headers="headers" :table-data="tableData"
-        @button-click="(rIdx, rData) => handleEdit('update', rData)" :select-list.sync="selectedList" />
+      <CommonTable
+        :number-per-page="10"
+        :headers="headers"
+        :table-data="tableData"
+        @button-click="(rIdx, rData) => handleEdit('update', rData)"
+        :select-list.sync="selectedList"
+      />
 
-      <SeatEditModal :action-type="actionType" :modal-show.sync="modalShow" :edit-content="currentData"
-        @request-save="updateData" @clear-current="currentData = null"></SeatEditModal>
+      <SeatEditModal
+        :action-type="actionType"
+        :modal-show.sync="modalShow"
+        :edit-content="currentData"
+        @request-save="updateData"
+        @clear-current="currentData = null"
+      ></SeatEditModal>
     </div>
-
   </div>
 </template>
 
@@ -39,28 +54,29 @@ export default {
         {
           width: 55,
           colAttrs: {
-            type: "selection"
+            type: 'selection',
+            className: 'selection-fix'
           }
         },
         {
           label: '位次',
           data: 'Seat',
           colAttrs: {
-            className: "text-center"
+            className: 'text-center'
           }
         },
         {
           label: '主機IP',
           data: 'IP',
           colAttrs: {
-            className: "text-center"
+            className: 'text-center'
           }
         },
         {
           label: '操作',
           type: 'button',
           colAttrs: {
-            className: "text-center"
+            className: 'text-center'
           }
         }
       ],
@@ -70,7 +86,7 @@ export default {
       modalShow: false,
       // 當前編輯物件指標
       currentData: null,
-      actionType: "",
+      actionType: '',
       // 表格資料來源
       tableData: [],
       // 已選列表 (刪除用)
@@ -89,26 +105,23 @@ export default {
     },
     // EMIT上來的新資料, 更新到原始資料陣列
     async updateData(actionType, rData) {
-      // 原生套件問題: MODAL關閉後需要一點時間更新幾個FLAG (modal關閉事件更新組件問題)
-      // 直接在這層手動關閉
-      this.modalShow = false
       this.isQuerying = true
       this.tableData = []
       switch (actionType) {
         case 'insert':
           this.insertNewSeat(rData)
-          break;
+          break
 
         case 'update':
           this.updateSeat(rData)
-          break;
+          break
 
         case 'delete':
           this.deleteSeat()
-          break;
+          break
 
         default:
-          break;
+          break
       }
       await this.mockLoading()
       this.tableData = this.$mockData.seatList
@@ -116,7 +129,8 @@ export default {
     },
     insertNewSeat(rData) {
       // 找到最後一組資料, 取得DBID
-      let getLastDBID = this.$mockData.seatList[this.$mockData.seatList.length - 1]
+      let getLastDBID =
+        this.$mockData.seatList[this.$mockData.seatList.length - 1]
       if (!getLastDBID) {
         getLastDBID = 1
       } else {
@@ -136,10 +150,10 @@ export default {
     },
     deleteSeat() {
       // 逐筆刪除
-      this.$mockData.seatList = this.$mockData.seatList.filter(element => {
+      this.$mockData.seatList = this.$mockData.seatList.filter((element) => {
         // 當前資料有出現在刪除名單裡的
-        let findIndex = this.selectedList.findIndex(subElement => 
-          Number(subElement.DBID) === Number(element.DBID)
+        let findIndex = this.selectedList.findIndex(
+          (subElement) => Number(subElement.DBID) === Number(element.DBID)
         )
         // 沒出現的才保留
         return findIndex === -1
@@ -155,7 +169,7 @@ export default {
     }
   },
   mounted() {
-    ; (async () => {
+    ;(async () => {
       // 進入後模擬讀取名單列表
       this.isQuerying = true
       this.tableData = this.$mockData.seatList
@@ -166,4 +180,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+/* 編譯時產生問題, 強制補CSS樣式 */
+::v-deep .selection-fix .cell {
+  padding-left: 14px;
+  padding-right: 14px;
+}
+</style>

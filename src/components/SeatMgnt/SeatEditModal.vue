@@ -1,22 +1,41 @@
 <template>
   <div class="seat-edit-modal">
-    <el-dialog :title="cModalCfg.title" :visible.sync="dialogVisible" width="80%">
+    <el-dialog
+      :title="cModalCfg.title"
+      :visible.sync="dialogVisible"
+      width="80%"
+    >
+      <!-- 新增/更新 -->
       <div class="px-3" v-if="actionType != 'delete'">
         <div class="row">
           <p class="col-2 col-form-label">位次</p>
           <div class="col-10">
-            <p class="p-0 m-0"><el-input v-model="cloneContent.Seat" size="mini"></el-input></p>
+            <p class="p-0 m-0">
+              <el-input
+                v-model="cloneContent.Seat"
+                :disabled="actionType === 'update'"
+                size="mini"
+              ></el-input>
+            </p>
           </div>
         </div>
         <div class="row">
           <p class="col-2 col-form-label">主機IP</p>
           <div class="col-10">
-            <p class="p-0 m-0"><el-input size="mini" v-model="cloneContent.IP"></el-input></p>
+            <p class="p-0 m-0">
+              <el-input size="mini" v-model="cloneContent.IP"></el-input>
+            </p>
           </div>
         </div>
       </div>
+      <!-- 刪除提示文字 -->
+      <div class="px-3" v-else>
+        <p class="col-form-label">確定要刪除選取的位次？</p>
+      </div>
       <span slot="footer" class="dialog-footer d-flex justify-content-center">
-        <el-button :type="cModalCfg.type" @click="requestSave">{{ cModalCfg.label }}</el-button>
+        <el-button :type="cModalCfg.type" @click="requestSave">{{
+          cModalCfg.label
+        }}</el-button>
         <el-button @click="dialogVisible = false">取消</el-button>
       </span>
     </el-dialog>
@@ -37,7 +56,7 @@ export default {
     },
     actionType: {
       type: String,
-      default: "insert"
+      default: 'insert'
     }
   },
   data() {
@@ -50,14 +69,18 @@ export default {
     // 送上去處理 (動作類型, 資料組)
     requestSave() {
       this.$emit('request-save', this.actionType, this.cloneContent)
+      // 強制更新上層狀態
+      // (可能是原生套件問題, 只關閉這層燈箱不會觸發emit通知, 大概是上層進讀取動畫導致觸發問題)
       this.dialogVisible = false
+      this.$emit('update:modalShow', false)
+      this.$emit('clear-current')
     },
     // 資料初始化
     resetCloneContent() {
       this.cloneContent = {
         DBID: null,
-        Seat: "",
-        IP: ""
+        Seat: '',
+        IP: ''
       }
     }
   },
@@ -68,25 +91,25 @@ export default {
     // 彈窗狀態: 新增/編輯/刪除
     cModalCfg() {
       let modalCfg = {
-        title: "",
-        type: "primary",
-        label: "儲存"
+        title: '',
+        type: 'primary',
+        label: '儲存'
       }
 
       switch (this.actionType) {
-        case "insert":
-          modalCfg.title = "新增位次"
-          break;
+        case 'insert':
+          modalCfg.title = '新增位次'
+          break
 
-        case "update":
-          modalCfg.title = "編輯位次"
-          break;
+        case 'update':
+          modalCfg.title = '編輯位次'
+          break
 
-        case "delete":
-          modalCfg.title = "確認刪除"
-          modalCfg.type = "danger"
-          modalCfg.label = "刪除"
-          break;
+        case 'delete':
+          modalCfg.title = '刪除位次'
+          modalCfg.type = 'danger'
+          modalCfg.label = '刪除'
+          break
       }
       return modalCfg
     }

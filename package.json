@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"serve": "vue-cli-service serve",
-		"buildandLint": "vue-cli-service lint && vue-cli-service build",
+		"build-and-lint": "vue-cli-service lint && vue-cli-service build",
 		"lint": "vue-cli-service lint"
 	},
 	"dependencies": {
@@ -46,8 +46,7 @@
 		"rules": {
 			"vue/no-unused-components": "off",
 			"no-mixed-spaces-and-tabs": 0,
-			"no-unused-vars": "off",
-			"prettier/prettier": "off"
+			"no-unused-vars": "off"
 		}
 	},
 	"browserslist": [

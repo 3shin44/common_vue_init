@@ -5,20 +5,15 @@
 </template>
 
 <script>
-  import SeatMgntPanel from '@/components/SeatMgnt/SeatMgntPanel.vue'
-  export default {
-    name: 'SeatMgntView',
-    components: { SeatMgntPanel },
-    props: {},
-    data() {
-      return {
-
-      }
-    },
-
+import SeatMgntPanel from '@/components/SeatMgnt/SeatMgntPanel.vue'
+export default {
+  name: 'SeatMgntView',
+  components: { SeatMgntPanel },
+  props: {},
+  data() {
+    return {}
   }
+}
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
