@@ -2,6 +2,9 @@
 import Vue from 'vue'
 Vue.config.productionTip = false
 
+import store from './store'
+Vue.prototype.$store = store
+
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
